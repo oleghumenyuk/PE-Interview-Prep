@@ -25,6 +25,7 @@ public class LogMiner {
         - **Why it’s crucial:** PE roles live in logs. This tests `HashMap` usage and memory management (you can't load the whole file at once).
         - **Java Focus:** `Files.lines()`, `HashMap<String, Integer>`, `PriorityQueue` (for "Top K").
 
+        plan
         Read logs one by one via BufferedReader
         162345 192.168.0.1 200 /api/v1/login
 
