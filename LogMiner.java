@@ -15,7 +15,20 @@ public class LogMiner {
      * - **Edge Cases to Handle:** Malformed lines (missing fields), non-integer status codes.
      */
     public static void main(String[] args) {
-        System.out.println("Test!");
+        /*
+
+        ### 2. The "Log Miner" (Aggregation)
+
+        **Problem:** Top K Frequent IP Addresses
+
+        - **The Task:** You are given a massive log file (10GB+). Each line is: `[TIMESTAMP] [IP_ADDRESS] [STATUS]`. Find the top 5 IP addresses that returned a `500` error.
+        - **Why it’s crucial:** PE roles live in logs. This tests `HashMap` usage and memory management (you can't load the whole file at once).
+        - **Java Focus:** `Files.lines()`, `HashMap<String, Integer>`, `PriorityQueue` (for "Top K").
+
+        Read logs one by one via BufferedReader
+        162345 192.168.0.1 200 /api/v1/login
+
+        */
 
     }
 }
