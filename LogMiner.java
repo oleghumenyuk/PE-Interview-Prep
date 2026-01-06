@@ -1,3 +1,8 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+
 public class LogMiner {
 
     /*
@@ -35,7 +40,57 @@ public class LogMiner {
         162345 192.168.0.1 200 /api/v1/login
 
         */
-       System.out.println("solve it!!!");
+
+        HashMap<String, Integer> statuses = new HashMap<>();
+
+        // open logs
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("server_logs.txt"))) {
+
+            String line;
+            while((line = bufferedReader.readLine()) != null ) {
+                IpStatus lineStatus = processLine(line);
+
+                if (lineStatus.valid && lineStatus.statusCode.equals("500")) {
+                    if(!statuses.containsKey(lineStatus.ipAddress)) {
+                        statuses.put(lineStatus.ipAddress,1);
+                    } else {
+                        int currentCount = statuses.get(lineStatus.ipAddress);
+                        statuses.put(lineStatus.ipAddress, currentCount + 1);
+                    }
+                }
+
+
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+
+       System.out.println(statuses.toString());
 
     }
+
+    public static IpStatus processLine(String logLine) {
+        return new IpStatus(logLine);
+    }
+
+
+    public static class IpStatus {
+        String ipAddress;
+        String statusCode;
+        boolean valid;
+
+        public IpStatus(String logLine) {
+            String[] convertedLogLine = logLine.split("\\s+");
+
+            if(convertedLogLine.length >= 3 && convertedLogLine.length <= 4) {
+                this.ipAddress = convertedLogLine[1];
+                this.statusCode = convertedLogLine[2];
+                this.valid = true;
+            } else {
+                this.valid = false;
+            }
+        }
+    }
+    
 }
