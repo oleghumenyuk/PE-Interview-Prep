@@ -1,3 +1,7 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class PidChecker {
 
     /*
@@ -16,6 +20,22 @@ public class PidChecker {
      */
 
     public static void main(String[] args) {
+
+
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))) {
+
+            String line;
+            while((line = bufferedReader.readLine()) != null) {
+                Integer id = Integer.parseInt(line);
+                if(id % 2 != 0) {
+                    System.out.println("Restarting PID: " + id);
+                }
+            }
+
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
     }
 }
