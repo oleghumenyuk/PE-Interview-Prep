@@ -1,7 +1,10 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.PriorityQueue;
 
 public class LogMiner {
 
@@ -66,7 +69,29 @@ public class LogMiner {
         }
 
 
-       System.out.println(statuses.toString());
+        //setup up PQ
+        PriorityQueue<Map.Entry<String, Integer>> minHeap = new PriorityQueue<>(
+            new Comparator<Map.Entry<String, Integer>>() {
+                public int compare(Map.Entry<String, Integer> first, Map.Entry<String, Integer> second) {
+                    return first.getValue() - second.getValue();
+                }
+            } 
+        );
+
+
+       
+
+       for(Map.Entry<String, Integer> entry: statuses.entrySet()) {
+        minHeap.offer(entry);
+
+        //if more than 5, we need to drop the smallest
+        if(minHeap.size() > 5) {
+            minHeap.poll();
+        }
+       }
+
+       //results of the top 5
+       System.out.println(minHeap.toString());
 
     }
 
