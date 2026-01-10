@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Arrays of SF data
+streets=("Market St" "Mission St" "Valencia St" "Folsom St" "Howard St" "Geary Blvd" "Divisadero St" "Van Ness Ave" "Lombard St" "California St" "Montgomery St" "Kearny St" "Grant Ave" "Powell St" "Mason St" "Taylor St" "Jones St" "Leavenworth St" "Hyde St" "Larkin St" "Polk St" "Franklin St" "Gough St" "Octavia St" "Fillmore St" "Steiner St" "Pierce St" "Scott St" "Broderick St" "Baker St" "Lyon St" "Presidio Ave" "Arguello Blvd" "Park Presidio Blvd" "19th Ave" "Sunset Blvd" "Irving St" "Judah St" "Noriega St" "Taraval St" "Ocean Ave" "Geneva Ave" "Bayshore Blvd" "Third St" "Potrero Ave" "Bryant St" "Harrison St" "Brannan St" "Townsend St" "King St")
+
+neighborhoods=("Mission" "SOMA" "Nob Hill" "Russian Hill" "Pacific Heights" "Marina" "Hayes Valley" "Castro" "Haight-Ashbury" "Richmond" "Sunset" "Excelsior" "Bayview" "Potrero Hill" "Dogpatch" "Financial District" "North Beach" "Chinatown" "Tenderloin" "Western Addition" "Bernal Heights" "Glen Park" "Twin Peaks" "Noe Valley" "Cole Valley" "Inner Sunset" "Outer Sunset" "Inner Richmond" "Outer Richmond" "Visitacion Valley" "Portola" "Crocker-Amazon")
+
+districts=("District 1" "District 2" "District 3" "District 4" "District 5" "District 6" "District 7" "District 8" "District 9" "District 10" "District 11")
+
+output_file="sf_addresses.txt"
+target_size=$((10 * 1024 * 1024))  # 10MB in bytes
+
+> "$output_file"  # Clear file
+
+while [ $(stat -f%z "$output_file" 2>/dev/null || stat -c%s "$output_file" 2>/dev/null || echo 0) -lt $target_size ]; do
+    street_num=$((RANDOM % 9000 + 1))
+    street="${streets[$((RANDOM % ${#streets[@]}))]}"
+    neighborhood="${neighborhoods[$((RANDOM % ${#neighborhoods[@]}))]}"
+    district="${districts[$((RANDOM % ${#districts[@]}))]}"
+    
+    echo "$street_num $street ($neighborhood, $district)" >> "$output_file"
+done
+
+echo "File created: $output_file"
+stat -f "Size: %z bytes" "$output_file" 2>/dev/null || stat -c "Size: %s bytes" "$output_file"
+wc -l "$output_file"
