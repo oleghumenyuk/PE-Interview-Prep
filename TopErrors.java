@@ -1,3 +1,10 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
+
 public class TopErrors {
 
     /*
@@ -66,6 +73,92 @@ public class TopErrors {
      */
     public static void main(String[] args) {
 
+        List<LogEntry> errors = new ArrayList<>();
+
+        // read in file
+        try {
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+            String line;
+            while((line = reader.readLine()) != null) {
+                errors.add(new LogEntry(line));
+            }
+        } catch (IOException ex) { 
+            ex.printStackTrace();
+        }
+
+        // store only last 10 minutes
+        List<LogEntry> logs = getLastTenMin(errors.reversed());
+        //System.out.println(logs.toString());
+
+
+        // go through last 10 minutes of errors and store them in HashMap<ErrorCode, # times seen>
+        HashMap<String, Integer> counts = getCounts(logs);
+        System.out.println(counts.toString());
+
+        // iterate through them all and return MAX
+        HashMap.Entry<String, Integer> MAX = counts.entrySet().iterator().next();
         
+
+        for(HashMap.Entry<String, Integer> errorSummary: counts.entrySet()) {
+            if(MAX.getValue() < errorSummary.getValue()) {
+                MAX = errorSummary;
+            }
+        }
+
+        System.out.println(MAX.toString());
+
+    }
+
+    public static HashMap<String, Integer> getCounts(List<LogEntry> errors) {
+        HashMap<String, Integer> counts = new HashMap<>();
+
+        for(LogEntry log: errors) {
+            if(counts.containsKey(log.errorName)) {
+                int count = counts.get(log.errorName);
+                counts.put(log.errorName, count + 1);
+            } else {
+                counts.put(log.errorName, 1);
+            }
+        }
+
+
+        return counts;
+    } 
+
+    public static List<LogEntry> getLastTenMin(List<LogEntry> errors) {
+        ArrayList<LogEntry> results = new ArrayList<>();
+
+        results.add(errors.getFirst());
+        Long now = results.getFirst().unixTimeStamp;
+        
+        //need stop time (now - 600)
+        Long stopTime = now - 600;
+
+        for(int i = 1; i < errors.size(); i++) {
+            if(errors.get(i).unixTimeStamp < stopTime) {
+                return results;
+            } else {
+                results.add(errors.get(i));
+            }
+        }
+
+        return results;
+    }
+
+    static class LogEntry {
+        String errorName;
+        Long unixTimeStamp;
+
+        public LogEntry(String line) {
+            String[] parsed = line.split(":");
+            this.errorName = parsed[0];
+            this.unixTimeStamp = Long.parseLong(parsed[1].trim());
+        }
+
+        public String toString() {
+            return "Error: " + this.errorName + " occured @ " + this.unixTimeStamp;
+        }
     }
 }
