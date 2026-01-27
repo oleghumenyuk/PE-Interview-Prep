@@ -1,3 +1,10 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
 public class KSortedLogs {
 
     /*
@@ -24,5 +31,64 @@ public class KSortedLogs {
      */
     public static void main(String[] args) {
 
+        BufferedReader server1Reader;
+        BufferedReader server2Reader; 
+        BufferedReader server3Reader;
+        PriorityQueue<LogEntry> pq = new PriorityQueue<>(Comparator.comparing(entry -> entry.time));
+
+        try {
+        server1Reader = new BufferedReader(new FileReader("server1.log"));
+        server2Reader = new BufferedReader(new FileReader("server2.log"));
+        server3Reader = new BufferedReader(new FileReader("server3.log"));
+
+        pq.add(new LogEntry(server1Reader.readLine(), server1Reader));
+        pq.add(new LogEntry(server2Reader.readLine(), server2Reader));
+        pq.add(new LogEntry(server3Reader.readLine(), server3Reader));
+
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+
+        while(!pq.isEmpty()) {
+            //pick out smallest item
+            LogEntry current = pq.poll();
+
+
+            //print smallest item
+            System.out.println(current);
+
+            //read in next item from that file
+            try {
+                String nextLine = current.fileReader.readLine();
+                if (nextLine == null ) {
+                    continue;
+                }
+                pq.add(new LogEntry(nextLine, current.fileReader));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            
+            
+
+        }
+
+    }
+
+    static class LogEntry {
+        LocalDateTime time;
+        String content;
+        BufferedReader fileReader;
+
+        public LogEntry(String line, BufferedReader source) {
+            String[] data = line.split("\\s+");
+
+            time = LocalDateTime.parse(data[0]);
+            content = data[1];
+            fileReader = source;
+        }
+
+        public String toString() {
+            return time.toString() + " content: " + content;
+        }
     }
 }
