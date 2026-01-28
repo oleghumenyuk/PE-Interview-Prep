@@ -1,0 +1,10 @@
+2024-01-15 10:23:45 INFO User login successful for user_id=12345
+2024-01-15 10:24:12 DEBUG Processing payment with card 4532-1234-5678-9012
+2024-01-15 10:24:15 INFO API request authenticated with key: sk_live_abc123XYZ789defGHI456
+2024-01-15 10:25:01 WARN Failed login attempt for email: john.doe@example.com
+2024-01-15 10:25:33 INFO Transaction completed for card number 5425233430109903
+2024-01-15 10:26:44 DEBUG Using API key api_key=prod_key_9a8b7c6d5e4f3g2h1i
+2024-01-15 10:27:12 ERROR Connection timeout for service auth-service
+2024-01-15 10:28:00 INFO Refund processed to card ending in 4111-1111-1111-1111
+2024-01-15 10:29:15 DEBUG Secret token: bearer_token_xyz789abc123
+2024-01-15 10:30:00 INFO Health check passed for all services
